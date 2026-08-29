@@ -1,0 +1,1 @@
+import ControllerChat from '@/components/ControllerChat';export default function Page(){return <div className="p-8 max-w-4xl"><h1 className="text-xl font-semibold">AI Finance Controller</h1><p className="mt-1 mb-6 text-sm text-ink-600">AI reasons over verified finance tools; deterministic services remain the source of financial truth.</p><ControllerChat/></div>}

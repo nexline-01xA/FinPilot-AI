@@ -1,0 +1,1 @@
+import './globals.css';import Shell from '@/components/Shell';import type {Metadata} from 'next';export const metadata:Metadata={title:'FinPilot AI',description:'Agentic finance operations with humans in control'};export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="en"><body><Shell>{children}</Shell></body></html>}

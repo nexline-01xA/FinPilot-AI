@@ -1,0 +1,1 @@
+import ApprovalsBoard from '@/components/ApprovalsBoard';export default function Page(){return <div className="p-8 max-w-4xl"><h1 className="text-xl font-semibold">Approvals</h1><p className="mt-1 mb-6 text-sm text-ink-600">Sensitive actions execute only after a human decision.</p><ApprovalsBoard/></div>}

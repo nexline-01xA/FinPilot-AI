@@ -1,0 +1,42 @@
+# UNVERIFIED end-to-end -- Docker is not available in the environment this
+# was authored in (confirmed: no docker binary, no daemon). Written to
+# standard compose syntax and internally consistent with the Dockerfiles
+# and .env.example below.
+#
+# PERSISTENCE: this demo stack runs on the verified SQLite core only. An
+# earlier version of this file also started a PostgreSQL container and made
+# the backend depend on it, while the application code never actually read
+# or wrote to it -- Docker would report Postgres "healthy" while it did
+# nothing, which is worse than just being honest that SQLite is what's
+# actually running. See docs/ARCHITECTURE.md and app/db_pg/ for the
+# Postgres migration target, which is real code but not wired into the
+# running app yet. Use docker-compose.postgres.yml once that changes.
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file: .env
+    environment:
+      PERSISTENCE_BACKEND: sqlite
+      SQLITE_PATH: /app/data/finpilot.db
+    ports:
+      - "8000:8000"
+    volumes:
+      - finpilot_data:/app/data
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+      INTERNAL_API_URL: http://backend:8000/api/v1
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  finpilot_data:
