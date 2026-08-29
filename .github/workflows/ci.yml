@@ -1,0 +1,57 @@
+name: FinPilot CI
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install backend dependencies
+        run: python -m pip install -r backend/requirements.txt
+      - name: Core regression tests
+        run: python -m unittest discover -s finpilot/tests -p 'test*.py' -v
+      - name: Service tests
+        working-directory: backend
+        run: python -m unittest tests.test_services -v
+      - name: FastAPI HTTP integration tests
+        working-directory: backend
+        run: python -m pytest tests/test_api.py -v
+      - name: Core evaluation
+        run: python -m finpilot.run_evaluation
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm install
+      - name: Build Next.js frontend
+        working-directory: frontend
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+          INTERNAL_API_URL: http://backend:8000/api/v1
+        run: npm run build
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare demo environment
+        run: cp .env.example .env
+      - name: Validate compose configuration
+        run: docker compose config
+      - name: Build demo images
+        run: docker compose build
