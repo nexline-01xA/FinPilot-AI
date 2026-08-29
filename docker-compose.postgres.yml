@@ -1,0 +1,26 @@
+# NOT the active demo stack -- see docker-compose.yml and docs/ARCHITECTURE.md.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: finpilot
+      POSTGRES_PASSWORD: finpilot
+      POSTGRES_DB: finpilot
+    ports:
+      - "5432:5432"
+    volumes:
+      - finpilot_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U finpilot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  backend:
+    environment:
+      PERSISTENCE_BACKEND: postgres
+      DATABASE_URL: postgresql://finpilot:finpilot@postgres:5432/finpilot
+    depends_on:
+      postgres:
+        condition: service_healthy
+volumes:
+  finpilot_pgdata:

@@ -1,0 +1,1 @@
+import AuditTimeline from '@/components/AuditTimeline';export default function Page(){return <div className="p-8 max-w-5xl"><h1 className="text-xl font-semibold">Audit Trail</h1><p className="mt-1 mb-6 text-sm text-ink-600">Proposal, decision, execution, verification, failure and retry evidence.</p><AuditTimeline/></div>}

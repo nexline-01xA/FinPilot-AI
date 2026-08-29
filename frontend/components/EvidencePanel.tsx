@@ -1,0 +1,1 @@
+export default function EvidencePanel({evidence}:{evidence:Record<string,unknown>}){return <pre className="overflow-auto rounded-lg bg-paper-50 p-3 text-xs text-ink-600">{JSON.stringify(evidence,null,2)}</pre>}
