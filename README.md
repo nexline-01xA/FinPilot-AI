@@ -40,6 +40,30 @@ The exact verification boundary and intentionally deferred items are documented 
 
 ## Demo
 
+### Windows one-command startup
+
+From the repository root, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\start-finpilot.ps1
+```
+
+Or double-click:
+
+```text
+scripts\start-finpilot.cmd
+```
+
+The launcher checks Docker Desktop, creates `.env` from `.env.example` when needed, starts the SQLite-backed Docker demo, waits for backend health, and opens `http://localhost:3000`.
+
+To stop the stack:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\stop-finpilot.ps1
+```
+
+### Manual startup
+
 ```bash
 cp .env.example .env
 docker compose up --build
@@ -67,6 +91,7 @@ finpilot/        deterministic finance engine + full core regression suite
 backend/         FastAPI routes, application services, schemas, Postgres migration target
 frontend/        Next.js / TypeScript finance-operations UI
 docs/            architecture, threat model, demo script, verification matrix
+scripts/         one-command Windows startup/shutdown helpers
 docker-compose.yml
 .env.example
 ```
