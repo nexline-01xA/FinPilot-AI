@@ -1,0 +1,1 @@
+Run scripts/start-finpilot.ps1 from the repository root on Windows. It starts the full Docker demo after backend health is ready.
