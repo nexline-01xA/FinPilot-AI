@@ -1,17 +1,3 @@
-# UNVERIFIED end-to-end -- Docker is not available in the environment this
-# was authored in (confirmed: no docker binary, no daemon). Written to
-# standard compose syntax and internally consistent with the Dockerfiles
-# and .env.example below.
-#
-# PERSISTENCE: this demo stack runs on the verified SQLite core only. An
-# earlier version of this file also started a PostgreSQL container and made
-# the backend depend on it, while the application code never actually read
-# or wrote to it -- Docker would report Postgres "healthy" while it did
-# nothing, which is worse than just being honest that SQLite is what's
-# actually running. See docs/ARCHITECTURE.md and app/db_pg/ for the
-# Postgres migration target, which is real code but not wired into the
-# running app yet. Use docker-compose.postgres.yml once that changes.
-
 services:
   backend:
     build:
@@ -25,6 +11,12 @@ services:
       - "8000:8000"
     volumes:
       - finpilot_data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
 
   frontend:
     build:
@@ -36,7 +28,8 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
 
 volumes:
   finpilot_data:
