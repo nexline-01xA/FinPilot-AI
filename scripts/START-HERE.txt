@@ -1,0 +1,1 @@
+Windows: from this repository root, run scripts\start-finpilot.ps1 in PowerShell. It creates .env if needed, starts Docker, waits for backend health, and opens http://localhost:3000.
